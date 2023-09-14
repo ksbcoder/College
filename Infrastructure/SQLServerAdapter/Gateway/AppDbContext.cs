@@ -13,6 +13,12 @@ namespace College.Infrastructure.SQLServerAdapter.Gateway
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Configurar la llave foranea de Subject - Teacher
+            modelBuilder.Entity<Subject>()
+                        .HasOne(s => s.Teacher)
+                        .WithMany()
+                        .HasForeignKey(s => s.TeacherID);
+
             // Configurar la entidad sin clave para SubjectEnrollments
             modelBuilder.Entity<SubjectEnrollments>().HasNoKey();
             base.OnModelCreating(modelBuilder);
