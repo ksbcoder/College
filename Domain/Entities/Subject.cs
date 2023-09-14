@@ -1,9 +1,11 @@
 ﻿using College.Domain.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace College.Domain.Entities
 {
     public class Subject
     {
+        [Key]
         public int Code { get; private set; }
         public string TeacherID { get; private set; }
         public string Name { get; private set; }

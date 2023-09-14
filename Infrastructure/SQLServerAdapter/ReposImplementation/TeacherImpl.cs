@@ -1,16 +1,18 @@
 ﻿using Ardalis.GuardClauses;
 using College.Business.IRepositories;
 using College.Domain.Entities;
+using College.Infrastructure.SQLServerAdapter.Gateway;
 using College.Wrappers;
 using Microsoft.EntityFrameworkCore;
+using static College.Domain.Common.Enums;
 
 namespace College.Infrastructure.SQLServerAdapter.ReposImplementation
 {
     public class TeacherImpl : ITeacher
     {
-        private readonly Gateway.AppDbContext _dbContext;
+        private readonly AppDbContext _dbContext;
 
-        public TeacherImpl(Gateway.AppDbContext dbContext)
+        public TeacherImpl(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -39,22 +41,24 @@ namespace College.Infrastructure.SQLServerAdapter.ReposImplementation
 
         public async Task<List<Teacher>> GetAllTeachersAsync()
         {
-            var teachers = await _dbContext.Teachers.ToListAsync();
+            var teachers = await _dbContext.Teachers.Where(t => t.StateTeacher == StateTeacher.Active).ToListAsync();
             return teachers.Count == 0 ?
                 throw new ApiException("There are not teachers.", StatusCodes.Status404NotFound) :
                 teachers;
         }
 
-        public async Task<Teacher> GetTeacherByIdAsync(string identification)
+        public async Task<Teacher> GetTeacherByIdAsync(string teacherID)
         {
-            var teacher = await _dbContext.Teachers.FirstOrDefaultAsync(x => x.TeacherID == Guid.Parse(identification));
+            var teacher = await _dbContext.Teachers.FirstOrDefaultAsync(x => x.TeacherID == Guid.Parse(teacherID)
+                                    && x.StateTeacher == StateTeacher.Active);
             return teacher ?? throw new ApiException("The teacher was not found.", StatusCodes.Status404NotFound);
         }
 
         public async Task<Teacher> UpdateTeacherAsync(string teacherID, Teacher teacher)
         {
-            var teacherFound = await _dbContext.Teachers.FirstOrDefaultAsync(x => x.TeacherID == Guid.Parse(teacherID)) ??
-                throw new ApiException("The teacher was not found.", StatusCodes.Status404NotFound);
+            var teacherFound = await _dbContext.Teachers.FirstOrDefaultAsync(x => x.TeacherID == Guid.Parse(teacherID)
+                                    && x.StateTeacher == StateTeacher.Active)
+                ?? throw new ApiException("The teacher was not found or was eliminated.", StatusCodes.Status404NotFound);
 
             Guard.Against.NullOrEmpty(teacher.Identification, nameof(teacher.Identification));
             Guard.Against.NullOrEmpty(teacher.Name, nameof(teacher.Name));

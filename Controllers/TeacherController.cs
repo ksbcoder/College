@@ -26,9 +26,9 @@ namespace College.Controllers
         public async Task<Teacher> UpdateTeacherAsync(string teacherID, [FromBody] UpdateTeacherCmd teacher) =>
             await _teacherUseCases.UpdateTeacherAsync(teacherID, _mapper.Map<Teacher>(teacher));
 
-        [HttpGet("{ID}")]
-        public async Task<Teacher> GetTeacherByIdAsync(string ID) =>
-            await _teacherUseCases.GetTeacherByIdAsync(ID);
+        [HttpGet("{teacherID}")]
+        public async Task<Teacher> GetTeacherByIdAsync(string teacherID) =>
+            await _teacherUseCases.GetTeacherByIdAsync(teacherID);
 
         [HttpGet]
         public async Task<List<Teacher>> GetAllTeachersAsync() =>
