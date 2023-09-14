@@ -49,5 +49,13 @@ namespace College.Domain.Entities
             StateStudent = stateStudent;
         }
         #endregion
+
+        #region Factory
+        public static Student SetDetailsStudent(Student student)
+        {
+            student.SetStateStudent(Enums.StateStudent.Active);
+            return student;
+        }
+        #endregion
     }
 }

@@ -22,8 +22,8 @@ builder.Services.AddAutoMapper(config => config.AddDataReaderMapping(), typeof(C
 var stringConnection = builder.Configuration.GetConnectionString("urlConnectionSQL");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(stringConnection));
 
-//builder.Services.AddScoped<IDbConnectionBuilder, DbConnectionBuilder>();
 builder.Services.AddScoped<ITeacher, TeacherImpl>();
+builder.Services.AddScoped<IStudent, StudentImpl>();
 
 var app = builder.Build();
 
