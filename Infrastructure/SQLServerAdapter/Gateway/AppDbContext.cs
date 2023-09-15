@@ -9,18 +9,30 @@ namespace College.Infrastructure.SQLServerAdapter.Gateway
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Subject> Subjects { get; set; }
-        public DbSet<SubjectEnrollments> Enrollments { get; set; }
+        public DbSet<SubjectEnrollment> SubjectEnrollments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configurar la llave foranea de Subject - Teacher
+            // Configurar la clave foranea de Subject - Teacher
             modelBuilder.Entity<Subject>()
                         .HasOne(s => s.Teacher)
                         .WithMany()
                         .HasForeignKey(s => s.TeacherID);
 
-            // Configurar la entidad sin clave para SubjectEnrollments
-            modelBuilder.Entity<SubjectEnrollments>().HasNoKey();
+            // Configurar la entidad sin clave para SubjectEnrollments y FKs
+            modelBuilder.Entity<SubjectEnrollment>()
+                        .HasKey(se => se.EnrollmentID); // Clave compuesta
+
+            modelBuilder.Entity<SubjectEnrollment>()
+                        .HasOne(se => se.Subject)
+                        .WithMany()
+                        .HasForeignKey(se => se.SubjectCode);
+
+            modelBuilder.Entity<SubjectEnrollment>()
+                        .HasOne(se => se.Student)
+                        .WithMany()
+                        .HasForeignKey(se => se.StudentID);
+
             base.OnModelCreating(modelBuilder);
         }
     }
