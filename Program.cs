@@ -26,6 +26,7 @@ builder.Services.AddScoped<ITeacher, TeacherImpl>();
 builder.Services.AddScoped<IStudent, StudentImpl>();
 builder.Services.AddScoped<ISubject, SubjectImpl>();
 builder.Services.AddScoped<ISubjectEnrollment, SubjectEnrollmentImpl>();
+builder.Services.AddScoped<IReport, ReportImpl>();
 
 var app = builder.Build();
 
