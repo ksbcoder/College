@@ -11,10 +11,12 @@ namespace College.Infrastructure.SQLServerAdapter.ReposImplementation
     public class StudentImpl : IStudent
     {
         private readonly AppDbContext _dbContext;
+        private readonly ISubjectEnrollment _subjectEnrollment;
 
-        public StudentImpl(AppDbContext dbContext)
+        public StudentImpl(AppDbContext dbContext, ISubjectEnrollment subjectEnrollment)
         {
             _dbContext = dbContext;
+            _subjectEnrollment = subjectEnrollment;
         }
 
         public async Task<Student> CreateStudentAsync(Student student)
@@ -45,6 +47,12 @@ namespace College.Infrastructure.SQLServerAdapter.ReposImplementation
                                     && s.StateStudent == StateStudent.Active)
                 ?? throw new ApiException("The student was not found, maybe was eliminated already.", StatusCodes.Status404NotFound);
 
+            var enrollments = await _subjectEnrollment.GetEnrollmentsByIDsAsync(null, studentID);
+
+            if (enrollments.Count > 0)
+                throw new ApiException("The student cannot be deleted; there are associated enrollments",
+                    StatusCodes.Status500InternalServerError);
+ 
             studentFound.SetStateStudent(StateStudent.Inactive);
 
             var studentDeleted = await _dbContext.SaveChangesAsync();

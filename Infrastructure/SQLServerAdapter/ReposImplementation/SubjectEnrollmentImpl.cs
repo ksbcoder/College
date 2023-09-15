@@ -75,11 +75,15 @@ namespace College.Infrastructure.SQLServerAdapter.ReposImplementation
             return _mapper.Map<SubjectEnrollmentDTO>(subjectEnrollment);
         }
 
-        public async Task<List<SubjectEnrollmentDTO>> GetEnrollmentsByIDsAsync(int code, string studentID)
+        public async Task<List<SubjectEnrollmentDTO>> GetEnrollmentsByIDsAsync(int? code, string studentID)
         {
-            var subjectEnrollments = await _dbContext.SubjectEnrollments.Where(se => se.SubjectCode == code
-                                            && se.StudentID.ToString() == studentID
-                                            && se.StateEnrollment == StateSubjectEnrollment.Active).ToListAsync();
+            var query = _dbContext.SubjectEnrollments.Where(se => se.StudentID.ToString() == studentID
+                 && se.StateEnrollment == StateSubjectEnrollment.Active);
+
+            if (code.HasValue)
+                query = query.Where(se => se.SubjectCode == code);
+
+            var subjectEnrollments = await query.ToListAsync();
 
             return _mapper.Map<List<SubjectEnrollmentDTO>>(subjectEnrollments);
         }

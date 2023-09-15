@@ -7,6 +7,6 @@ namespace College.Business.IRepositories
     {
         public Task<SubjectEnrollmentDTO> AssignToStudentAsync(SubjectEnrollment subjectEnrollment);
         public Task<SubjectEnrollmentDTO> GetByIDsAsync(int code, string studentID);
-        public Task<List<SubjectEnrollmentDTO>> GetEnrollmentsByIDsAsync(int code, string studentID);
+        public Task<List<SubjectEnrollmentDTO>> GetEnrollmentsByIDsAsync(int? code, string studentID);
     }
 }
