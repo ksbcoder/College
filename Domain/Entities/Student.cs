@@ -4,6 +4,7 @@ namespace College.Domain.Entities
 {
     public class Student
     {
+        public Guid StudentID { get; private set; }
         public string Identification { get; private set; }
         public string Name { get; private set; }
         public string LastName { get; private set; }
@@ -14,6 +15,11 @@ namespace College.Domain.Entities
 
         public Student() { }
 
+        #region Setters
+        public void SetStudentID(Guid studentID)
+        {
+            StudentID = studentID;
+        }
         public void SetIdentification(string identification)
         {
             Identification = identification;
@@ -42,5 +48,14 @@ namespace College.Domain.Entities
         {
             StateStudent = stateStudent;
         }
+        #endregion
+
+        #region Factory
+        public static Student SetDetailsStudent(Student student)
+        {
+            student.SetStateStudent(Enums.StateStudent.Active);
+            return student;
+        }
+        #endregion
     }
 }

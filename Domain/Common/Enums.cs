@@ -18,7 +18,7 @@
             Inactive
         }
         public enum StateSubjectEnrollment
-        { 
+        {
             Active,
             Inactive
         }
