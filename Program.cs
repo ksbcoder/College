@@ -15,6 +15,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Configuration CORS
+builder.Services.AddCors(p => p.AddPolicy("devcors", builder =>
+{
+    builder.WithOrigins("http://localhost:5173").AllowAnyMethod().AllowAnyHeader();
+}));
+
 // Configuration AutoMapper
 builder.Services.AddAutoMapper(config => config.AddDataReaderMapping(), typeof(ConfigurationProfile));
 
@@ -38,6 +44,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// CORS
+app.UseCors("devcors");
 
 app.UseAuthorization();
 
